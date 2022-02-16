@@ -13,5 +13,5 @@ import configuration from './common/config/configuration';
   })],
   controllers: [AppController],
   providers: [AppService],
-})
+});
 export class AppModule {}
