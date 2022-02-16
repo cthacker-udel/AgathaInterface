@@ -14,16 +14,39 @@ export class AuthenticationService {
     async validateCredentials(req: Request) {
         const accountDB = this.getMongoRepo<AccountEntity>(AccountEntity);
         try {
-            const userCredentials = await accountDB.findOne({ username: req.headers['username'] as string, password: req.headers['password'] as string});
+            this.hmac.update(req.headers['password'] as string);
+            const passHex = this.hmac.digest('hex');
+            const userCredentials = await accountDB.findOne({ username: req.headers['username'] as string, password: passHex});
             if (userCredentials) {
-                this.hmac.update(req.headers['password'] as string);
-                const passHex = this.hmac.digest('hex');
                 await accountDB.update({ username: userCredentials.username, password: passHex }, { token: randomBytes(10).toString(), tokendate: new Date().toISOString() })
                 return passHex === userCredentials.password && req.headers['username'] as string === userCredentials.username;
             }
         } catch (e) {
             throw new HttpException('Invalid Credentials', HttpStatus.BAD_REQUEST);
         }
+    }
+
+    async validateSession(req: Request) {
+
+        const accountDB = this.getMongoRepo<AccountEntity>(AccountEntity);
+        try {
+            this.hmac.update(req.headers['password'] as string);
+            const passHex = this.hmac.digest('hex');
+            const userCreds = await accountDB.findOne({ username: req.headers['username'] as string, password: passHex });
+            if (userCreds) {
+                const tokenTime = new Date(userCreds.tokendate);
+                const currTime = new Date();
+                const diff = (currTime.getTime() - tokenTime.getTime()) * 60 * 60;
+                if (diff > 30) {
+                    // more then 30 minutes
+                    throw new HttpException('Invalid Session', HttpStatus.BAD_REQUEST);
+                }
+                return true;
+            }
+        } catch (e) {
+            throw e;
+        }
+
     }
     
 }
