@@ -10,8 +10,7 @@ export class AccountController {
     @Post('login')
     async loginUser(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
         try {
-            const username = request.headers['username'];
-            const password = request.headers['password'];
+            await this.authenticationService.validateCredentials(request);
         } catch (e) {
             response.status(HttpStatus.UNAUTHORIZED).send();
         }

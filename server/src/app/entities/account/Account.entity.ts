@@ -12,4 +12,10 @@ export class AccountEntity {
     @Column()
     password: string;
 
+    @Column()
+    token: string;
+
+    @Column()
+    tokendate: string;
+
 }
