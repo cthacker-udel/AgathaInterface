@@ -1,0 +1,26 @@
+.header {
+    text-align: center;
+    border-bottom: 2px solid black;
+}
+
+.about_us {
+    float: right;
+}
+
+
+.login_button {
+    text-align: center;
+}
+
+.login_form {
+    text-align: center;
+}
+
+.email_form {
+    width: 50vw;
+    text-align: center;
+}
+
+.password_form {
+    width: 50vw;
+}
