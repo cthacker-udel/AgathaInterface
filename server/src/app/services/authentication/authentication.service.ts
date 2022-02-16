@@ -1,8 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { createHmac } from "crypto";
 import secret from "config/secret/secret";
 import { Request } from "express";
 import { EntityTarget, getConnection } from "typeorm";
+import { AccountEntity } from "../../entities/account/Account.entity";
 
 @Injectable()
 export class AuthenticationService {
@@ -12,10 +13,16 @@ export class AuthenticationService {
     
     async validateCredentials(req: Request) {
 
-        const accountDBUser = this.getMongoRepo<
-        // get database password via username
-        // hash the passed password
-        // compare, if valid then return true
+        const accountDB = this.getMongoRepo<AccountEntity>(AccountEntity);
+        try {
+            const userCredentials = await accountDB.findOne({ username: req.headers['username'] as string, password: req.headers['password'] as string});
+            if (userCredentials) {
+                this.hmac.update(req.headers['password'] as string);
+                return this.hmac.digest('hex') === userCredentials.password && req.headers['username'] as string === userCredentials.username;
+            }
+        } catch (e) {
+            throw new HttpException('Invalid Credentials', HttpStatus.BAD_REQUEST);
+        }
 
     }
     

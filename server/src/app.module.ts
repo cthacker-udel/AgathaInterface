@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './common/config/configuration';
+import { AuthenticationService } from './app/services/authentication/authentication.service';
+import { AccountModule } from './app/modules/account.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -10,8 +10,8 @@ import configuration from './common/config/configuration';
       cache: true,
       load: [configuration],
       ignoreEnvFile: true
-  })],
-  controllers: [AppController],
-  providers: [AppService],
+  }), AccountModule],
+  controllers: [],
+  providers: [AuthenticationService],
 })
 export class AppModule {}
