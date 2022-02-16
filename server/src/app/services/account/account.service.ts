@@ -31,7 +31,19 @@ export class AccountService {
         } catch (e) {
             throw e;
         }
+    }
 
+    async getAccount(req: Request) {
+        try {
+            const repo = this.getMongoRepo<AccountEntity>(AccountEntity);
+            const result = await repo.find({ username: req.headers['username'] as string });
+            if (result) {
+                return { username: result[0].username, tokendate: result[0].tokendate };
+            }
+            throw new HttpException("Username does not exist", HttpStatus.BAD_REQUEST);
+        } catch (e) {
+            throw e;
+        }
     }
 
     

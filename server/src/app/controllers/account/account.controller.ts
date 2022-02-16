@@ -1,11 +1,12 @@
-import { Controller, HttpStatus, Param, Post, Req, Res } from "@nestjs/common";
+import { Controller, Get, HttpStatus, Param, Post, Req, Res } from "@nestjs/common";
 import { Request, Response } from "express";
+import { AccountService } from "../../services/account/account.service";
 import { AuthenticationService } from "../../services/authentication/authentication.service";
 
 @Controller("account")
 export class AccountController {
 
-    constructor(private authenticationService: AuthenticationService) {}
+    constructor(private authenticationService: AuthenticationService, private accountService: AccountService) {}
 
     @Post('login')
     async loginUser(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
@@ -19,7 +20,16 @@ export class AccountController {
     @Post('create')
     async createUser(@Req() request: Request, @Res({ passthrough: true}) response: Response) {
         try {
+            await this.accountService.createAccount(request);
+        } catch (e) {
+            response.status(HttpStatus.BAD_REQUEST).send();
+        }
+    }
 
+    @Get(':username')
+    async getAccount(@Req() request: Request, @Res({ passthrough: true}) response: Response) {
+        try {
+            
         } catch (e) {
             response.status(HttpStatus.BAD_REQUEST).send();
         }
