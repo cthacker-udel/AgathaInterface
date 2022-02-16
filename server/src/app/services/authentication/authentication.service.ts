@@ -27,7 +27,6 @@ export class AuthenticationService {
     }
 
     async validateSession(req: Request) {
-
         const accountDB = this.getMongoRepo<AccountEntity>(AccountEntity);
         try {
             this.hmac.update(req.headers['password'] as string);

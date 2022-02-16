@@ -1,6 +1,6 @@
 import { Controller, Get, HttpException, HttpStatus, Req } from "@nestjs/common";
+import { Request } from "express";
 import { AuthenticationService } from "../../services/authentication/authentication.service";
-
 
 @Controller('auth')
 export class AuthenticationController {
@@ -11,7 +11,7 @@ export class AuthenticationController {
     async validateSession(@Req() request: Request) {
 
         try {
-            
+            await this.authenticationService.validateSession(request);
         } catch (e) {
             throw new HttpException("Invalid Session", HttpStatus.BAD_REQUEST);
         }
