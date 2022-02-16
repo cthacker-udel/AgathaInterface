@@ -18,9 +18,11 @@ export class AccountController {
 
     @Post('create')
     async createUser(@Req() request: Request, @Res({ passthrough: true}) response: Response) {
+        try {
 
-
-
+        } catch (e) {
+            response.status(HttpStatus.BAD_REQUEST).send();
+        }
     }
 
 }

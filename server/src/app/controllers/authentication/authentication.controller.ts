@@ -9,14 +9,11 @@ export class AuthenticationController {
 
     @Get('validate_session')
     async validateSession(@Req() request: Request) {
-
         try {
             await this.authenticationService.validateSession(request);
         } catch (e) {
             throw new HttpException("Invalid Session", HttpStatus.BAD_REQUEST);
         }
-
     }
-
 
 }
