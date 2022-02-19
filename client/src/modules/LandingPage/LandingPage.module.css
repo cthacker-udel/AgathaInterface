@@ -5,5 +5,19 @@
 .landing_page_button {
     vertical-align: middle;
     text-align: center;
-    margin-top: 50vh;
+    padding-top: 50vh;
+    padding-bottom: 5vh;
+}
+
+.landing_page_container {
+    background: linear-gradient(20deg, #71d62b, #c1d6d5);
+}
+
+.landing_page_button {
+    height: 4vh;
+    text-align: center;
+}
+
+.landing_page_button_div {
+    padding-left: 50vw;
 }
