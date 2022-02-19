@@ -1,0 +1,9 @@
+.row_height {
+    height: 100vh;
+}
+
+.landing_page_button {
+    vertical-align: middle;
+    text-align: center;
+    margin-top: 50vh;
+}
