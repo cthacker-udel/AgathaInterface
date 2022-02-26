@@ -9,6 +9,14 @@
     padding-bottom: 5vh;
 }
 
+.landing_page_header {
+
+    font-size: 3em;
+    text-align: center;
+    margin-top: 40vh;
+
+}
+
 .landing_page_container {
     background: linear-gradient(20deg, #71d62b, #c1d6d5);
 }
@@ -19,5 +27,11 @@
 }
 
 .landing_page_button_div {
-    padding-left: 50vw;
+    padding-left: 45vw;
+    padding-top: 1vh;
+}
+
+.landing_page_spinner {
+    margin-right: 40vw;
+    align-content: center;
 }
