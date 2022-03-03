@@ -11,11 +11,14 @@ import {
 import { Eye } from "react-feather";
 import { useNavigate } from "react-router-dom";
 
+import { addUser } from '../../api/client-side/user/adduser';
+
 type Error = {
   time: DateTime;
   reason: string;
   errorTitle: string;
   show?: boolean;
+  variant?: string;
 };
 
 export const SignUp = () => {
@@ -29,7 +32,7 @@ export const SignUp = () => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState<Error[]>([]);
 
-  const submitUser = () => {
+  const submitUser = async () => {
     const checked = password === confirmPassword && email.length >= 6;
     if (!checked) {
       console.log("errors = ", errors);
@@ -46,6 +49,7 @@ export const SignUp = () => {
               reason: "Both passwords must be the same",
               errorTitle: "Password Error",
               show: true,
+              variant: "danger"
             },
           ];
         });
@@ -59,10 +63,43 @@ export const SignUp = () => {
               reason: "Email invalid",
               errorTitle: "Email Error",
               show: true,
+              variant: "danger"
             },
           ];
         });
       }
+    } else {
+        const response = await addUser(email, password);
+        if (response) {
+            setTimeout(() => {
+                navigate('/app/login');
+            }, 3000);
+            setErrors((oldErrors) => {
+                return [
+                    ...oldErrors,
+                    {
+                        time: DateTime.now(),
+                        reason: "Successful Account Creation!",
+                        errorTitle: "Account Created Successfully!",
+                        show: true,
+                        variant: "success"
+                    }
+                ]
+            })
+        } else {
+            setErrors((oldErrors) => {
+                return [
+                    ...oldErrors,
+                    {
+                        time: DateTime.now(),
+                        reason: "Invalid Sign Up: Something went wrong",
+                        errorTitle: "Invalid Creation",
+                        show: true,
+                        variant: "danger"
+                    }
+                ]
+            })
+        }
     }
   };
 
@@ -145,8 +182,8 @@ export const SignUp = () => {
         <Card.Footer className="mx-auto w-100 text-center">
           <Button
             variant="outline-success"
-            onClick={() => {
-              submitUser();
+            onClick={async () => {
+              await submitUser();
             }}
           >
             Submit
@@ -174,6 +211,8 @@ export const SignUp = () => {
               show={e.show}
               delay={3000 * (idx + .5)}
               autohide
+              key={idx}
+              bg={e.variant ? e.variant : "danger" }
             >
               <Toast.Header closeButton={true}>
                 <div>{e.errorTitle}</div>

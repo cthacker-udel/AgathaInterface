@@ -2,21 +2,22 @@ import { AccountEntity } from './../../entities/account/Account.entity';
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Request } from "express";
 import { EntityTarget, getConnection } from "typeorm";
-import { createHmac } from 'crypto';
+import { createHmac, Hmac } from 'crypto';
 import secret from 'config/secret/secret';
 
 @Injectable()
 export class AccountService {
 
     private getMongoRepo<T>(repo: EntityTarget<T>) { return getConnection('mongo').getRepository<T>(repo) }
-    private hmac = createHmac('sha256', secret);
+    private hmac: Hmac;
 
     async createAccount(req: Request) {
         try {
+            this.hmac = createHmac('sha256', secret);
             // only check by username, no need for password
             const repo = this.getMongoRepo<AccountEntity>(AccountEntity);
-            const result = await repo.find({ username: req.headers['username'] as string });
-            if (result) {
+            const result = await repo.find({ username: req.body.data.username as string });
+            if (result.length > 0) {
                 throw new HttpException('Username already exists', HttpStatus.BAD_REQUEST);
             }
             // valid username -- create account
@@ -28,7 +29,9 @@ export class AccountService {
             newAccount.token = "";
             newAccount.tokendate = "";
             repo.save(newAccount);
+            console.log("created account");
         } catch (e) {
+            console.log('createerror = ', e);
             throw e;
         }
     }

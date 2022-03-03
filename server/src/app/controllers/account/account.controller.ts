@@ -23,6 +23,7 @@ export class AccountController {
         try {
             await this.accountService.createAccount(request);
         } catch (e) {
+            console.log('createrror = ', e);
             response.status(HttpStatus.BAD_REQUEST).send();
         }
     }
