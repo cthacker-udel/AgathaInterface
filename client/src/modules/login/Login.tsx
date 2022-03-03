@@ -12,11 +12,14 @@ import {
 } from "react-bootstrap";
 import { Eye } from "react-feather";
 import { authenticateUser } from "../../api/client-side/auth/authenticateuser";
+import { useNavigate } from 'react-router-dom';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
   const [username, setUsername] = useState<string>("");
+
+    const navigate = useNavigate();
 
   return (
     <Container fluid>
@@ -94,7 +97,9 @@ export const Login = () => {
           </Button>
           </span>
           <span style={{ marginLeft: '2vw'}}>
-            <Button>
+            <Button onClick={() => {
+                navigate('/app/signup');
+            }}>
                 Sign up
             </Button>
           </span>
