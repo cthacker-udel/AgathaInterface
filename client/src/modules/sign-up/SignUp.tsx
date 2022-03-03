@@ -29,6 +29,43 @@ export const SignUp = () => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState<Error[]>([]);
 
+  const submitUser = () => {
+    const checked = password === confirmPassword && email.length >= 6;
+    if (!checked) {
+      console.log("errors = ", errors);
+      if (
+        password !== confirmPassword ||
+        password.length === 0 ||
+        confirmPassword.length === 0
+      ) {
+        setErrors((oldErrors) => {
+          return [
+            ...oldErrors,
+            {
+              time: DateTime.now(),
+              reason: "Both passwords must be the same",
+              errorTitle: "Password Error",
+              show: true,
+            },
+          ];
+        });
+      }
+      if (email.length < 6) {
+        setErrors((oldErrors) => {
+          return [
+            ...oldErrors,
+            {
+              time: DateTime.now(),
+              reason: "Email invalid",
+              errorTitle: "Email Error",
+              show: true,
+            },
+          ];
+        });
+      }
+    }
+  };
+
   return (
     <>
       <Card bg="light" className="w-75 mx-auto">
@@ -84,7 +121,9 @@ export const SignUp = () => {
                 <Form.Control
                   type={showPassword.confirm ? "text" : "password"}
                   placeholder="Confirm Password"
-                  onChange={(e) => setConfirmPassword((oldVal) => e.target.value)}
+                  onChange={(e) =>
+                    setConfirmPassword((oldVal) => e.target.value)
+                  }
                   value={confirmPassword}
                 />
                 <Button
@@ -107,7 +146,7 @@ export const SignUp = () => {
           <Button
             variant="outline-success"
             onClick={() => {
-              console.log("submitted");
+              submitUser();
             }}
           >
             Submit
@@ -122,32 +161,28 @@ export const SignUp = () => {
           </Button>
         </Card.Footer>
       </Card>
-      {errors.length > 0 ? (
-        <ToastContainer className="p-3" position="top-end">
-          {errors.map((e: Error) => {
-            return (
-              <Toast
-                onClose={() => {
-                  e.show = false;
-                }}
-                show={e.show}
-                delay={3000}
-                autohide
-              >
-                <Toast.Header closeButton={true}>
-                  {e.errorTitle}
-                  <small>
-                    {DateTime.now().minus(e.time).toFormat("HH mm ss from now")}
-                  </small>
-                </Toast.Header>
-                <Toast.Body>{e.reason}</Toast.Body>
-              </Toast>
-            );
-          })}
-        </ToastContainer>
-      ) : (
-        <></>
-      )}
+      <ToastContainer className="p-3 mt-5" position="top-end">
+        {errors.map((e: Error, idx: number) => {
+          return (
+            <Toast
+              onClose={() => {
+                setErrors((oldErrors) => {
+                    oldErrors[idx].show = false;
+                    return [...oldErrors];
+                })
+              }}
+              show={e.show}
+              delay={3000 * (idx + .5)}
+              autohide
+            >
+              <Toast.Header closeButton={true}>
+                <div>{e.errorTitle}</div>
+              </Toast.Header>
+              <Toast.Body>{e.reason}</Toast.Body>
+            </Toast>
+          );
+        })}
+      </ToastContainer>
     </>
   );
 };
