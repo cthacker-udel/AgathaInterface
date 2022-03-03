@@ -19,7 +19,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "dev:start": "npm run prebuild && nest build && nest start --debug --watch"
+    "dev:start": "npm run prebuild && nest build && nest start --debug --watch",
+    "create-client": "mkdir config && mkdir config/secret && touch config/secret/secret.ts && touch config/development.ts && echo \"Fill in files with appropriate values\""
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
