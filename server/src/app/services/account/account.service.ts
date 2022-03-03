@@ -21,8 +21,8 @@ export class AccountService {
             }
             // valid username -- create account
             const newAccount = new AccountEntity();
-            newAccount.username = req.headers['username'] as string;
-            this.hmac.update(req.headers['password'] as string);
+            newAccount.username = req.body.data.username as string;
+            this.hmac.update(req.body.data.password as string);
             const passHex = this.hmac.digest('hex');
             newAccount.password = passHex;
             newAccount.token = "";

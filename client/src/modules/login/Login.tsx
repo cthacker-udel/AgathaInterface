@@ -82,8 +82,9 @@ export const Login = () => {
           </Card>
         </Col>
       </Row>
-      <Row className={`mt-4 ${styles.login_button}`}>
+      <Row className={`mt-4 ${styles.login_button} no-gutters`}>
         <Col>
+        <span>
           <Button
             onClick={() => {
               authenticateUser(username, password);
@@ -91,6 +92,12 @@ export const Login = () => {
           >
             Login
           </Button>
+          </span>
+          <span style={{ marginLeft: '2vw'}}>
+            <Button>
+                Sign up
+            </Button>
+          </span>
         </Col>
       </Row>
     </Container>

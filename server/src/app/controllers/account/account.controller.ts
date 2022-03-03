@@ -13,6 +13,7 @@ export class AccountController {
         try {
             await this.authenticationService.validateCredentials(request);
         } catch (e) {
+            console.log("error e ", e);
             response.status(HttpStatus.UNAUTHORIZED).send();
         }
     }

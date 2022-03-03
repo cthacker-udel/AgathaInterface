@@ -12,17 +12,20 @@ export class AuthenticationService {
     private getMongoRepo<T>(repo: EntityTarget<T>) { return getConnection('mongo').getRepository<T>(repo) };
     
     async validateCredentials(req: Request) {
-        console.log("in validate credentials");
         const accountDB = this.getMongoRepo<AccountEntity>(AccountEntity);
         try {
-            this.hmac.update(req.headers['password'] as string);
+            console.log('user = ', req.body.data.username);
+            this.hmac.update(req.body.data.password as string);
             const passHex = this.hmac.digest('hex');
-            const userCredentials = await accountDB.findOne({ username: req.headers['username'] as string, password: passHex});
+            console.log("before getting user creds, passhex = ", passHex);
+            const userCredentials = await accountDB.findOne({ username: req.body.data.username as string, password: passHex});
+            console.log("user creds = ", userCredentials);
             if (userCredentials) {
                 await accountDB.update({ username: userCredentials.username, password: passHex }, { token: randomBytes(10).toString(), tokendate: new Date().toISOString() })
-                return passHex === userCredentials.password && req.headers['username'] as string === userCredentials.username;
+                return passHex === userCredentials.password && req.body.data.username as string === userCredentials.username;
             }
         } catch (e) {
+            console.log("error e ", e);
             throw new HttpException('Invalid Credentials', HttpStatus.BAD_REQUEST);
         }
     }
