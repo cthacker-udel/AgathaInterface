@@ -1,11 +1,10 @@
 import { readFile, readFileSync } from "fs";
 import * as yaml from "js-yaml";
 import { join, resolve } from "path";
+import creds from "config/development";
 
 const ENV = "development";
 
 export default () => {
-    return yaml.load(
-        readFileSync(resolve(__dirname, "../../../../config", `${ENV}.json`), 'utf-8')
-    ) as Record<string, any>;
+    return creds as Record<string, any>;
 }
