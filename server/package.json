@@ -19,13 +19,14 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "dev:start": "npm run prebuild && nest build && nest start"
+    "dev:start": "npm run prebuild && nest build && nest start --watch"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^1.2.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
+    "cors": "^2.8.5",
     "fs": "^0.0.1-security",
     "js-yaml": "^4.1.0",
     "path": "^0.12.7",

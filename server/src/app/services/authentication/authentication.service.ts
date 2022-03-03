@@ -12,6 +12,7 @@ export class AuthenticationService {
     private getMongoRepo<T>(repo: EntityTarget<T>) { return getConnection('mongo').getRepository<T>(repo) };
     
     async validateCredentials(req: Request) {
+        console.log("in validate credentials");
         const accountDB = this.getMongoRepo<AccountEntity>(AccountEntity);
         try {
             this.hmac.update(req.headers['password'] as string);
